@@ -37,7 +37,21 @@ footer{margin-top:44px;color:var(--muted)}
 <button id="demo">查看示意分類結果</button>
 <div class="result" id="result" aria-live="polite"><div class="label">人工設計的預期分類（非實際模型輸出）</div><pre id="output"></pre></div>
 </section>
-<section><h2>04｜怎麼執行</h2>
+<section><h2>04｜本機實測結果（真實模型輸出）</h2>
+<p>2026/10/31 在 Windows 命令提示字元使用 <code>uv run python main.py</code> 呼叫本地 Ollama。以下是從實際執行畫面轉錄的輸入與 JSON 結果，<strong>不是預先寫好的展示答案</strong>；為避免公開電腦使用者名稱，未上傳含本機路徑的 CMD 原始截圖。</p>
+<div class="label">測試輸入</div>
+<pre>您好，我購買的耳機一直沒有收到，請幫我查詢訂單進度。</pre>
+<div class="label">模型實際回傳的 JSON</div>
+<pre>{
+  "category": "退款退貨",
+  "priority": "高",
+  "summary": "請聯繫我們的客服，查詢您的訂單進度並提供退款退貨的幫助。",
+  "suggested_reply": "您可以在我們的客服網站或是電話我們的客服熱線，與我們的客服人員聯繫。"
+}</pre>
+<p><strong>結果分析：</strong>程式成功呼叫 LLM 並取得符合指定四欄位的結構化輸出，但分類結果不理想。客戶只要求查詢未到貨訂單，較合理的類別是「訂單查詢」，不是「退款退貨」。這顯示 JSON 格式正確不代表內容判斷一定正確；實際使用應人工複核，並可透過加入分類定義與範例來改善提示詞。</p>
+<p class="note">此為單筆本機實測案例，不代表整體分類正確率。上方互動範例仍是靜態示意，不會在瀏覽器直接呼叫模型。</p>
+</section>
+<section><h2>05｜怎麼執行</h2>
 <p>先安裝 <a href="https://docs.astral.sh/uv/">uv</a> 與 <a href="https://ollama.com/">Ollama</a>，並啟動 Ollama：</p>
 <pre>ollama pull llama3.2
 # 視作業系統需要，另開終端執行 ollama serve
@@ -47,7 +61,7 @@ uv run python main.py --text "您好，我的包裹還沒收到，想查詢物�
 <p>自動測試：</p><pre>uv run python -m unittest discover -s tests -v</pre>
 <p class="note">本地模型下載需要網路、記憶體與磁碟空間。輸出可能因模型版本、硬體與輸入而不同。</p>
 </section>
-<section><h2>05｜AI 使用說明與限制</h2>
+<section><h2>06｜AI 使用說明與限制</h2>
 <p>本專案使用 AI 協助規劃、撰寫程式、設計 JSON Schema、測試與作品網頁。分類建議應由人員複核，避免將個資輸入不受控服務。範例展示不冒充模型實跑結果。</p>
 <p>程式預設只連至本機 Ollama；<code>.env</code> 被 <code>.gitignore</code> 排除，因此不會把私人設定檔提交到 GitHub。</p>
 <p><a href="https://github.com/justtemp5678-sys/ai-mail-classifier">查看完整原始碼及 README</a></p>

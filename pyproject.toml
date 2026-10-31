@@ -1,0 +1,9 @@
+[project]
+name = "ai-mail-classifier"
+version = "0.1.0"
+description = "Local Ollama structured-output customer email classifier"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.uv]
+package = false

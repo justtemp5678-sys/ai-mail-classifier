@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Python + uv + Ollama 結構化輸出客服信件分類器教學展示">
+<title>AI Mail Classifier — 智慧客服信件分類</title>
+<style>
+:root{color-scheme:dark;--bg:#090f20;--card:#15213a;--text:#eef3ff;--muted:#a8b7d5;--accent:#80dbcc}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;background:radial-gradient(ellipse at 80% 0%,#203c65,transparent 45%),var(--bg);color:var(--text);line-height:1.7}
+main{max-width:1000px;margin:auto;padding:56px 22px 90px}a{color:var(--accent)}h1{font-size:clamp(2.5rem,7vw,4.5rem);line-height:1.16;margin:10px 0}h2{margin:0 0 15px;font-size:1.4rem}
+.kicker{letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;color:var(--accent);font-weight:700}.lead{color:var(--muted);max-width:700px;font-size:1.12rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 48px}.badges span{border:1px solid #435476;background:#162640;padding:5px 12px;border-radius:100px}
+section{background:var(--card);border:1px solid #31405e;border-radius:18px;padding:28px;margin:22px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.grid section{margin:0}
+textarea{width:100%;min-height:118px;resize:vertical;border-radius:10px;background:#0a1427;color:var(--text);border:1px solid #526886;padding:14px;font:inherit}
+button{padding:10px 19px;margin-top:12px;background:var(--accent);color:#092326;border:0;border-radius:9px;font:inherit;font-weight:750;cursor:pointer}
+pre{overflow-x:auto;padding:18px;background:#081225;border-radius:10px;font-size:.94rem;white-space:pre-wrap;word-break:break-word}
+small,.note{color:var(--muted)}.result{margin-top:18px;display:none}.result.show{display:block}.label{color:var(--accent);font-weight:700}
+footer{margin-top:44px;color:var(--muted)}
+@media(max-width:720px){.grid{grid-template-columns:1fr}main{padding-top:30px}section{padding:19px}}
+</style></head>
+<body><main>
+<header><div class="kicker">Python × uv × Ollama × GitHub Actions</div>
+<h1>AI 客服信件<br>智慧分類器</h1>
+<p class="lead">用本地大型語言模型讀取客服信件，輸出固定 JSON 格式的類別、優先級、摘要與建議回覆，協助整理大量客服需求。</p>
+<div class="badges"><span>結構化輸出 JSON Schema</span><span>5 種信件類別</span><span>本地執行</span><span>自動部署 Pages</span></div></header>
+<div class="grid">
+<section><h2>01｜做了什麼</h2><p>Python 透過 Ollama 的 <code>/api/chat</code> 呼叫 <code>llama3.2</code>，用 JSON Schema 限制回應欄位與有效分類。無需雲端 API Key。</p></section>
+<section><h2>02｜技術特色</h2><p>AI 功能使用<strong>結構化輸出</strong>，程式另驗證欄位與類別；GitHub Actions 推送 main 後會執行自動測試並發佈本站。</p></section>
+</div>
+<section><h2>03｜執行結果：互動式範例展示</h2>
+<p class="note"><strong>注意：</strong>以下按鈕使用預先寫好的示意資料，並未在瀏覽器中呼叫 LLM。要得到真正的 AI 推論結果，請依下方指令在本機執行。</p>
+<label for="email">選擇客服信件範例</label>
+<select id="email" style="display:block;margin:12px 0 15px;padding:12px;border-radius:9px;background:#0a1427;color:#fff;width:100%;border:1px solid #526886">
+<option value="order">包裹未到貨</option><option value="refund">商品退貨</option><option value="tech">無法登入帳號</option></select>
+<textarea id="mail" aria-label="示意信件內容" readonly></textarea>
+<button id="demo">查看示意分類結果</button>
+<div class="result" id="result" aria-live="polite"><div class="label">人工設計的預期分類（非實際模型輸出）</div><pre id="output"></pre></div>
+</section>
+<section><h2>04｜怎麼執行</h2>
+<p>先安裝 <a href="https://docs.astral.sh/uv/">uv</a> 與 <a href="https://ollama.com/">Ollama</a>，並啟動 Ollama：</p>
+<pre>ollama pull llama3.2
+# 視作業系統需要，另開終端執行 ollama serve
+git clone https://github.com/justtemp5678-sys/ai-mail-classifier.git
+cd ai-mail-classifier
+uv run python main.py --text "您好，我的包裹還沒收到，想查詢物流。"</pre>
+<p>自動測試：</p><pre>uv run python -m unittest discover -s tests -v</pre>
+<p class="note">本地模型下載需要網路、記憶體與磁碟空間。輸出可能因模型版本、硬體與輸入而不同。</p>
+</section>
+<section><h2>05｜AI 使用說明與限制</h2>
+<p>本專案使用 AI 協助規劃、撰寫程式、設計 JSON Schema、測試與作品網頁。分類建議應由人員複核，避免將個資輸入不受控服務。範例展示不冒充模型實跑結果。</p>
+<p>程式預設只連至本機 Ollama；<code>.env</code> 被 <code>.gitignore</code> 排除，因此不會把私人設定檔提交到 GitHub。</p>
+<p><a href="https://github.com/justtemp5678-sys/ai-mail-classifier">查看完整原始碼及 README</a></p>
+</section>
+<footer>AI Mail Classifier · 課程作品展示 · Python / uv / Ollama / GitHub Pages</footer></main>
+<script>
+const examples={
+order:{mail:"您好，我上週訂購的耳機一直沒有收到，請幫我確認物流進度。",result:{category:"訂單查詢",priority:"中",summary:"顧客詢問未收到的訂單物流狀態。",suggested_reply:"您好，請提供訂單編號，我們會協助確認物流進度。"}},
+refund:{mail:"收到的衣服尺寸不合，請問可以申請退貨退款嗎？",result:{category:"退款退貨",priority:"中",summary:"顧客希望將尺寸不合的商品退貨退款。",suggested_reply:"您好，請提供訂單編號及收貨日期，以便說明退貨流程。"}},
+tech:{mail:"我重設密碼後還是無法登入帳號，可以幫忙處理嗎？",result:{category:"技術支援",priority:"中",summary:"顧客在重設密碼後仍無法登入。",suggested_reply:"您好，請提供錯誤訊息截圖（請遮蔽個資），我們將協助排查。"}}
+};
+const select=document.getElementById("email"),mail=document.getElementById("mail"),out=document.getElementById("output"),result=document.getElementById("result");
+function update(){mail.value=examples[select.value].mail;result.classList.remove("show")}
+select.addEventListener("change",update);
+document.getElementById("demo").addEventListener("click",()=>{out.textContent=JSON.stringify(examples[select.value].result,null,2);result.classList.add("show")});
+update();
+</script></body></html>
